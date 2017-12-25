@@ -4,7 +4,7 @@ import java.util.*;
 class IdentityCardManager {
 
     ///// CONSTANTS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private static final int MAX_CAPACITY = 1000; // max capacity of arrays, maps, lists, etc. if needed, can be subject to change
+    private static final int MAX_CAPACITY = 1000; // max capacity of TreeMaps, if needed, can be subject to change
     private static final String[] COMMANDS = new String[] {"exit", "Automatically saves changes and exits the program.", "nsexit", "Does not save changes and exits the program.", "help", "Displays the list of commands with descriptions of each.", "createid", "Creates a new ID Card."};// MORE TO COME
     private static final int COMMANDS_ARRAY_SPLIT = 2;
     // create a list/array/whatever of help strings for each command
@@ -286,6 +286,36 @@ class IdentityCardManager {
                             }
                             System.out.println("Success.");
                         }
+                        break;
+
+                    case "/removeconnection":
+                        if (argNum < 2 || argNum > 3) {
+                            System.out.println("Invalid syntax.");
+                            continue;
+                        } else if (argNum == 3) {
+                            String IDNumberInputString_RemoveConnection = commandArgs[1];
+                            String IDNumberInput2String_RemoveConnection = commandArgs[2];
+                            int IDNumberInput_RemoveConnection;
+                            int IDNumberInput2_RemoveConnection;
+                            try {
+                                IDNumberInput_RemoveConnection = Integer.parseInt(IDNumberInputString_RemoveConnection);
+                                IDNumberInput2_RemoveConnection = Integer.parseInt(IDNumberInput2String_RemoveConnection);
+                            } catch (NumberFormatException ex) {
+                                System.out.println("You did not enter an ID Number.");
+                                continue;
+                            }
+                            if (!allIDCards.containsKey(IDNumberInput_RemoveConnection)) {
+                                System.out.println("That ID Number does not exist.");
+                                continue;
+                            }
+                            if (allIDCards.get(IDNumberInput_RemoveConnection).getConnection(IDNumberInput2_RemoveConnection) == null) {
+                                System.out.println("That ID Number does not exist.");
+                                continue;
+                            }
+                            allIDCards.get(IDNumberInput_RemoveConnection).getConnections().removeConnection(IDNumberInput2_RemoveConnection);
+                            System.out.println("Success.");
+                        }
+                        // make it so it lists the possible connections to remove in the case of 2 arguments
                         break;
 
                     case "/createid":

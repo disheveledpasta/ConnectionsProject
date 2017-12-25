@@ -41,7 +41,7 @@ class IdentityCard {
     ///// GET METHODS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     Object getProperty(String requestedProperty) {
-        return properties.propertiesList.get(requestedProperty);
+        return properties.getProperty(requestedProperty);
     }
 
     Properties getProperties() {
@@ -49,7 +49,7 @@ class IdentityCard {
     }
 
     ConnectionsProperties getConnection(Integer IDNumber) {
-        return connections.connectionsList.get(IDNumber);
+        return connections.getConnection(IDNumber);
     }
 
     Connections getConnections() {
@@ -57,15 +57,15 @@ class IdentityCard {
     }
 
     Object getConnectionsProperty(Integer IDNumber, String requestedProperty) {
-        ConnectionsProperties connectionsProperty = connections.connectionsList.get(IDNumber);
+        ConnectionsProperties connectionsProperty = connections.getConnection(IDNumber);
         if (connectionsProperty != null) {
-            return (connectionsProperty.propertiesList.get(requestedProperty));
+            return (connectionsProperty.getProperty(requestedProperty));
         }
         return null;
     }
 
     ConnectionsProperties getConnectionsProperties(Integer IDNumber) {
-        return connections.connectionsList.get(IDNumber);
+        return connections.getConnection(IDNumber);
     }
 
     String getName() { return name; }
@@ -73,37 +73,37 @@ class IdentityCard {
     ///// ADD METHODS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     void addProperty(String index, Object value) {
-        if (!properties.propertiesList.containsKey(index)) {
-            properties.propertiesList.put(index, value);
+        if (getProperty(index) == null) {
+            properties.addProperty(index, value);
         }
     }
 
     void addProperties(Map<String, Object> propertiesListInput) { // do not set to private
         for (Map.Entry<String, Object> e : propertiesListInput.entrySet()) {
-            if (!properties.propertiesList.containsKey(e.getKey())) {
-                properties.propertiesList.put(e.getKey(), e.getValue());
+            if (properties.getProperty(e.getKey()) == null) {
+                properties.addProperty(e.getKey(), e.getValue());
             }
         }
     }
 
     void addConnection(Integer index, ConnectionsProperties value) {
-        if (!connections.connectionsList.containsKey(index)) {
-            connections.connectionsList.put(index, value);
+        if (connections.getConnection(index) == null) {
+            connections.addConnection(index, value);
         }
     }
 
     void addConnections(Map<Integer, ConnectionsProperties> connectionsListInput) {
         for (Map.Entry<Integer, ConnectionsProperties> e : connectionsListInput.entrySet()) {
-            if (!connections.connectionsList.containsKey(e.getKey())) {
-                connections.connectionsList.put(e.getKey(), e.getValue());
+            if (connections.getConnection(e.getKey()) == null) {
+                connections.addConnection(e.getKey(), e.getValue());
             }
         }
     }
 
     void addConnectionsProperty(Integer requestedIDNumber, String newProperty, Object newValue) {
-        if (!connections.connectionsList.containsKey(requestedIDNumber)) {
-            if (!connections.connectionsList.get(requestedIDNumber).propertiesList.containsKey(newProperty)) {
-                connections.connectionsList.get(requestedIDNumber).propertiesList.put(newProperty, newValue);
+        if (connections.getConnection(requestedIDNumber) == null) {
+            if (connections.getConnection(requestedIDNumber).getProperty(newProperty) != null) {
+                connections.getConnection(requestedIDNumber).addProperty(newProperty, newValue);
             }
         }
     }
@@ -111,8 +111,8 @@ class IdentityCard {
     void addConnectionsProperties(Integer requestedIDNumber, Map<String, Object> connectionsProperties) {
         if (!connections.connectionsList.containsKey(requestedIDNumber)) {
             for (Map.Entry<String, Object> e : connectionsProperties.entrySet()) {
-                if (!connections.connectionsList.get(requestedIDNumber).propertiesList.containsKey(e.getKey())) {
-                    connections.connectionsList.get(requestedIDNumber).propertiesList.put(e.getKey(),e.getValue());
+                if (connections.getConnection(requestedIDNumber).getProperty(e.getKey()) == null) {
+                    connections.getConnection(requestedIDNumber).addProperty(e.getKey(), e.getValue());
                 }
             }
         }
@@ -121,25 +121,31 @@ class IdentityCard {
     ///// EDIT METHODS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     void editProperty(String requestedProperty, Object newValue) {
-        properties.propertiesList.replace(requestedProperty, newValue); // <-- The replace() method automatically checks for null
+        properties.editProperty(requestedProperty, newValue); // <-- The replace() method automatically checks for null
     }
 
     void editConnection(Integer requestedIDNumber, ConnectionsProperties newProperties) {
-        connections.connectionsList.replace(requestedIDNumber, newProperties);
+        connections.editConnection(requestedIDNumber, newProperties);
     }
 
     void editConnectionProperty(Integer requestedIDNumber, String requestedProperty, Object newValue) {
-        if (connections.connectionsList.containsKey(requestedIDNumber)) {
-            connections.connectionsList.get(requestedIDNumber).propertiesList.replace(requestedProperty, newValue);
+        if (connections.getConnection(requestedIDNumber) != null) {
+            connections.getConnection(requestedIDNumber).editProperty(requestedProperty, newValue);
+        }
+    }
+
+    ///// CONNECTION VALUE CHANGES ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    void incrementConnectionLevel(Integer requestedIDNumber, int newConnectionLevel) {
+        if (connections.getConnection(requestedIDNumber) != null) {
+            connections.getConnection(requestedIDNumber).connectionLevel += newConnectionLevel;
         }
     }
 
     void editConnectionLevel(Integer requestedIDNumber, int newConnectionLevel) {
-        if (connections.connectionsList.containsKey(requestedIDNumber))
-            connections.connectionsList.get(requestedIDNumber).connectionLevel = newConnectionLevel;
+        if (connections.getConnection(requestedIDNumber) != null)
+            connections.getConnection(requestedIDNumber).connectionLevel = newConnectionLevel;
     }
-
-    ///// CONNECTION VALUE CHANGES ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     void incrementKnowledgeLevel(int num) {
         knowledgeLevel += num;

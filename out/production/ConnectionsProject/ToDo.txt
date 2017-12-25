@@ -13,3 +13,5 @@
 5. Perhaps make it so if ID Cards are removed, the next ID Card created can replace the now empty ID Number.
 
 6. Reform variable names in the switch statement in IdentityCardManager
+
+7. Add an option for reciprocated connections.

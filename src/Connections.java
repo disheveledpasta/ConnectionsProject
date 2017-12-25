@@ -10,4 +10,20 @@ class Connections {
 
     Connections () {}
 
+    ConnectionsProperties getConnection(Integer i) {
+        return connectionsList.get(i);
+    }
+
+    void addConnection(Integer i, ConnectionsProperties v) {
+        connectionsList.put(i, v);
+    }
+
+    void editConnection(Integer o, ConnectionsProperties n) {
+        connectionsList.replace(o, n);
+    }
+
+    void removeConnection(Integer i) {
+        connectionsList.remove(i);
+    }
+
 }
