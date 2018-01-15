@@ -1,17 +1,13 @@
 1. Finish first prototype, then analyze what to do. Likely involving the interface, more methods, and data persistence. <-- after current
 
-2. System.out.println("List of commands:\n" + // commands list
-                        "/connection (get/add/edit/remove/removeall)\n" +
-                        "/property (get/add/edit/remove/removeall)\n" +
-                        "/IDCard (create/remove)\n" +
-                        "/IDTree\n");
+2. Reform commands list
 
-3. Add editProperty(), editConnection(), and editConnectionProperty(). <-- current
+3. Add editProperty(), editConnection(), and editConnectionProperty(). <-- DONE
 
-4. Add a bunch of null checkers. <-- current
+4. Add a bunch of null checkers. <-- DONE
 
-5. Perhaps make it so if ID Cards are removed, the next ID Card created can replace the now empty ID Number.
+5. Maybe make it so if ID Cards are removed, the next ID Card created can replace the now empty ID Number. Weigh benefits and drawbacks.
 
-6. Reform variable names in the switch statement in IdentityCardManager
+6. Reform variable names in the switch statement in IdentityCardManager <-- DONE
 
 7. Add an option for reciprocated connections.

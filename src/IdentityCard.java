@@ -101,15 +101,15 @@ class IdentityCard {
     }
 
     void addConnectionsProperty(Integer requestedIDNumber, String newProperty, Object newValue) {
-        if (connections.getConnection(requestedIDNumber) == null) {
-            if (connections.getConnection(requestedIDNumber).getProperty(newProperty) != null) {
+        if (connections.getConnection(requestedIDNumber) != null) {
+            if (connections.getConnection(requestedIDNumber).getProperty(newProperty) == null) {
                 connections.getConnection(requestedIDNumber).addProperty(newProperty, newValue);
             }
         }
     }
 
     void addConnectionsProperties(Integer requestedIDNumber, Map<String, Object> connectionsProperties) {
-        if (!connections.connectionsList.containsKey(requestedIDNumber)) {
+        if (connections.getConnection(requestedIDNumber) != null) {
             for (Map.Entry<String, Object> e : connectionsProperties.entrySet()) {
                 if (connections.getConnection(requestedIDNumber).getProperty(e.getKey()) == null) {
                     connections.getConnection(requestedIDNumber).addProperty(e.getKey(), e.getValue());

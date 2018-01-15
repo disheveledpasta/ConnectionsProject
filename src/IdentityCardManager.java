@@ -6,6 +6,7 @@ class IdentityCardManager {
     ///// CONSTANTS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private static final int MAX_CAPACITY = 1000; // max capacity of TreeMaps, if needed, can be subject to change
     private static final String[] COMMANDS = new String[] {"exit", "Automatically saves changes and exits the program.", "nsexit", "Does not save changes and exits the program.", "help", "Displays the list of commands with descriptions of each.", "createid", "Creates a new ID Card."};// MORE TO COME
+    // ^^ HIGHLY OUTDATED ^^
     private static final int COMMANDS_ARRAY_SPLIT = 2;
     // create a list/array/whatever of help strings for each command
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,11 +36,8 @@ class IdentityCardManager {
         return allIDCards.get(IDNumber);
     }
 
-    private static boolean removeIDCard(Integer IDNumber) {
-        if (allIDCards.get(IDNumber) == null)
-            return false;
+    private static void removeIDCard(Integer IDNumber) {
         allIDCards.remove(IDNumber);
-        return true;
     }
 
     private static void printArray(String[] a, int multipleOf) {
@@ -77,7 +75,12 @@ class IdentityCardManager {
                         }
                         System.out.println("Goodbye");
                         // SAVE
-                        // wait(5) <-- Find a suitable method
+                        try {
+                            Thread.sleep(1500);
+                        }
+                        catch (InterruptedException ex) {
+                            Thread.currentThread().interrupt();
+                        }
                         break mainLoop;
 
                     case "/nsexit":
@@ -289,10 +292,10 @@ class IdentityCardManager {
                         break;
 
                     case "/removeconnection":
-                        if (argNum < 2 || argNum > 3) {
+                        if (argNum < 3 || argNum > 3) { // FOR NOW; SOON TO BE A 2-ARG VERSION
                             System.out.println("Invalid syntax.");
                             continue;
-                        } else if (argNum == 3) {
+                        } else { // if (argNum == 3)
                             String IDNumberInputString_RemoveConnection = commandArgs[1];
                             String IDNumberInput2String_RemoveConnection = commandArgs[2];
                             int IDNumberInput_RemoveConnection;
@@ -427,7 +430,9 @@ class IdentityCardManager {
                                         }
                                         if (initialConnectionLevel >= 0)
                                             break;
-                                        else System.out.println("You cannot enter a negative value.");
+                                        else
+                                            System.out.println("You cannot enter a negative value.");
+                                        break;
                                     }
                                 } else {
                                     initialConnectionLevel = 0;
