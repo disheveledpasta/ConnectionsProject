@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.*;
 //import java.io.*;
 
@@ -74,7 +75,17 @@ class IdentityCardManager {
                             continue mainLoop;
                         }
                         System.out.println("Goodbye");
+
+
                         // SAVE
+                        IdentityCard[] writeArray = allIDCards.values().toArray(new IdentityCard[allIDCards.size()]);
+                        try {
+                            PersistenceManager.writeIDs(writeArray);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+
+
                         try {
                             Thread.sleep(1500);
                         }
