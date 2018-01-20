@@ -12,8 +12,8 @@ class IdentityCardManager {
     // create a list/array/whatever of help strings for each command
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private static final Map<Integer, IdentityCard> allIDCards = new TreeMap<>(); // final ok?
-    private static final Set<String> allNames = new TreeSet<>();
+    private static Map<Integer, IdentityCard> allIDCards = new TreeMap<>(); // final ok?
+    private static Set<String> allNames = new TreeSet<>();
 
     private static int nextIDNumber = 1;
 
@@ -58,6 +58,18 @@ class IdentityCardManager {
     }
 
     public static void main(String[] args) {
+
+        System.out.println("Loading previous ID Cards...");
+        allIDCards = PersistenceManager.readIDs().allIDCards;
+        allNames = PersistenceManager.readIDs().allNames;
+        int greatestIDNumber = 1;
+        for (IdentityCard IDCard : allIDCards.values()) {
+            if (IDCard.getIDNumber() > greatestIDNumber) {
+                greatestIDNumber = IDCard.getIDNumber();
+            }
+        }
+        nextIDNumber = greatestIDNumber;
+
         mainLoop: while (true) {
             Scanner sc = new Scanner(System.in);
             System.out.print("Input a command: "); // make more user-friendly, add reference to exit or help commands?
@@ -76,7 +88,6 @@ class IdentityCardManager {
                         }
                         System.out.println("Goodbye");
 
-
                         // SAVE
                         IdentityCard[] writeArray = allIDCards.values().toArray(new IdentityCard[allIDCards.size()]);
                         try {
@@ -84,7 +95,6 @@ class IdentityCardManager {
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
-
 
                         try {
                             Thread.sleep(1500);

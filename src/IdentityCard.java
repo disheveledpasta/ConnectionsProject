@@ -70,6 +70,8 @@ class IdentityCard {
 
     String getName() { return name; }
 
+    int getIDNumber() { return IDNumber; }
+
     ///// ADD METHODS ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     void addProperty(String index, Object value) {
