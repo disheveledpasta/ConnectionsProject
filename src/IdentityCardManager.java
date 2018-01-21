@@ -1,4 +1,6 @@
-import java.io.IOException;
+import com.thoughtworks.xstream.XStream;
+
+import java.io.*;
 import java.util.*;
 //import java.io.*;
 
@@ -16,6 +18,9 @@ class IdentityCardManager {
     private static Set<String> allNames = new TreeSet<>();
 
     private static int nextIDNumber = 1;
+
+    private static boolean newGroup = false;
+    private static int nextGroupNumber = 1;
 
     private static IdentityCard createIDCard(String nameInput, Map<String, Object> propertiesInput, Map<Integer, ConnectionsProperties> connectionsInput) { // with preexisting connections
         IdentityCard newIDCard = new IdentityCard(nextIDNumber, nameInput, propertiesInput, connectionsInput);
@@ -59,18 +64,77 @@ class IdentityCardManager {
 
     public static void main(String[] args) {
 
-        System.out.println("Loading previous ID Cards...");
-        allIDCards = PersistenceManager.readIDs().allIDCards;
-        allNames = PersistenceManager.readIDs().allNames;
-        int greatestIDNumber = 1;
-        for (IdentityCard IDCard : allIDCards.values()) {
-            if (IDCard.getIDNumber() > greatestIDNumber) {
-                greatestIDNumber = IDCard.getIDNumber();
+        File configFile = new File("config.IDCFG");
+        if (configFile.isFile()) {
+            String configCode = "";
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader("config.IDCFG"));
+                configCode = reader.readLine();
+                reader.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            nextIDNumber = Integer.parseInt(String.valueOf(configCode.charAt(0)));
+            nextGroupNumber = Integer.parseInt(String.valueOf(configCode.charAt(1)));
+        } else {
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter("config.IDCFG"));
+                writer.write("11");
+                writer.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
-        nextIDNumber = greatestIDNumber;
 
-        mainLoop: while (true) {
+        // Ask from which group to load from (/end for none)
+        int groupID = -2;
+
+        File[] groupFiles = PersistenceManager.IDPATH.listFiles();
+        boolean groupLoadSuccess = false;
+        if (groupFiles != null) {
+            while (true) {
+                Scanner s = new Scanner(System.in);
+                System.out.print("Which group to load from? (/end for none): ");
+                String groupNameInput = s.nextLine();
+                if (groupNameInput.toLowerCase().equals("/end")) {
+                    break;
+                }
+                groupFileLoop:
+                for (File groupFile : groupFiles) {
+                    if (groupFile.isDirectory() && (groupFile.getName().equals(groupNameInput))) {
+                        File[] IDFiles = groupFile.listFiles();
+                        if (IDFiles != null) {
+                            for (File IDFile : IDFiles) {
+                                if (IDFile.getName().endsWith(".IDGROUP")) {
+                                    XStream xstream = new XStream();
+                                    Group group = (Group)xstream.fromXML(IDFile);
+                                    groupID = group.groupID;
+                                    groupLoadSuccess = true;
+                                    break groupFileLoop;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (groupLoadSuccess) {
+                    break;
+                } else {
+                    System.out.println("Invalid group ID.");
+                }
+            }
+        }
+
+        if (groupID > 0) {
+            PersistentData pd = PersistenceManager.readIDs(groupID);
+            allIDCards = pd.allIDCards;
+            allNames = pd.allNames;
+            System.out.println("Load successful.");
+        } else {
+            newGroup = true;
+        }
+
+        mainLoop:
+        while (true) {
             Scanner sc = new Scanner(System.in);
             System.out.print("Input a command: "); // make more user-friendly, add reference to exit or help commands?
             String nextString = sc.nextLine();
@@ -86,16 +150,37 @@ class IdentityCardManager {
                             System.out.println("Invalid syntax.");
                             continue mainLoop;
                         }
-                        System.out.println("Goodbye");
 
                         // SAVE
-                        IdentityCard[] writeArray = allIDCards.values().toArray(new IdentityCard[allIDCards.size()]);
+                        if (!newGroup) {
+                            IdentityCard[] writeArray = allIDCards.values().toArray(new IdentityCard[allIDCards.size()]);
+                            try {
+                                PersistenceManager.writeIDs(writeArray, groupID);
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                        } else {
+                            IdentityCard[] writeArray = allIDCards.values().toArray(new IdentityCard[allIDCards.size()]);
+                            try {
+                                PersistenceManager.writeIDs(writeArray, nextGroupNumber);
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                        ////
+
+                        // CFG FILE
                         try {
-                            PersistenceManager.writeIDs(writeArray);
+                            BufferedWriter writer = new BufferedWriter(new FileWriter("config.IDCFG"));
+                            String newConfigCode = ("" + nextIDNumber + nextGroupNumber);
+                            writer.write(newConfigCode);
+                            writer.close();
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
+                        ////
 
+                        System.out.println("Goodbye");
                         try {
                             Thread.sleep(1500);
                         }
