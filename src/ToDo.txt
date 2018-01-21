@@ -11,3 +11,9 @@
 6. Reform variable names in the switch statement in IdentityCardManager <-- DONE
 
 7. Add an option for reciprocated connections.
+
+_____Groups_____
+
+1. Fix nextGroupNumber so it actually increments.
+
+2. Make it so nextIDNumber is per-group rather than per-program.

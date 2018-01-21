@@ -14,13 +14,13 @@ class IdentityCardManager {
     // create a list/array/whatever of help strings for each command
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private static Map<Integer, IdentityCard> allIDCards = new TreeMap<>(); // final ok?
+    private static Map<Integer, IdentityCard> allIDCards = new TreeMap<>();
     private static Set<String> allNames = new TreeSet<>();
 
     private static int nextIDNumber = 1;
 
-    private static boolean newGroup = false;
     private static int nextGroupNumber = 1;
+    private static boolean newGroup = false;
 
     private static IdentityCard createIDCard(String nameInput, Map<String, Object> propertiesInput, Map<Integer, ConnectionsProperties> connectionsInput) { // with preexisting connections
         IdentityCard newIDCard = new IdentityCard(nextIDNumber, nameInput, propertiesInput, connectionsInput);
