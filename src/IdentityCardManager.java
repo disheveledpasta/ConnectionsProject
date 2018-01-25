@@ -170,6 +170,7 @@ class IdentityCardManager {
                         ////
 
                         // CFG FILE
+                        nextGroupNumber++;
                         try {
                             BufferedWriter writer = new BufferedWriter(new FileWriter("config.IDCFG"));
                             String newConfigCode = ("" + nextIDNumber + nextGroupNumber);
@@ -180,7 +181,7 @@ class IdentityCardManager {
                         }
                         ////
 
-                        System.out.println("Goodbye");
+                        System.out.println("Goodbye.");
                         try {
                             Thread.sleep(1500);
                         }

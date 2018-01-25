@@ -6,7 +6,7 @@
 
 4. Add a bunch of null checkers. <-- DONE
 
-5. Maybe make it so if ID Cards are removed, the next ID Card created can replace the now empty ID Number. Weigh benefits and drawbacks.
+5. Maybe make it so if ID Cards are removed, the next ID Card created can replace the now empty ID Number. Weigh benefits and drawbacks. <-- PROBABLY NOT POSSIBLE - REMEMBER nextGroupNumber!
 
 6. Reform variable names in the switch statement in IdentityCardManager <-- DONE
 
@@ -14,6 +14,6 @@
 
 _____Groups_____
 
-1. Fix nextGroupNumber so it actually increments.
+1. Fix nextGroupNumber so it actually increments. <-- DONE
 
 2. Make it so nextIDNumber is per-group rather than per-program.
